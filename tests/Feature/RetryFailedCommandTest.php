@@ -22,7 +22,7 @@ class RetryFailedCommandTest extends TestCase
         ]);
 
         $this->artisan('notifications:retry-failed')
-            ->expectsOutputToContain('Found 1 notifications to retry')
+            ->expectsOutputToContain('Found 1 notifications to process')
             ->assertExitCode(0);
 
         $this->assertDatabaseHas('notifications', [
@@ -31,18 +31,18 @@ class RetryFailedCommandTest extends TestCase
         ]);
     }
 
-    public function test_command_skips_when_pending_exists()
+    public function test_command_skips_failed_when_recent_pending_exists()
     {
         Queue::fake();
 
-        // Create a pending notification
+        // Create a recent pending notification (default created_at is now)
         Notification::factory()->create(['status' => 'pending']);
         
         // Create a failed notification
         Notification::factory()->create(['status' => 'failed']);
 
         $this->artisan('notifications:retry-failed')
-            ->expectsOutputToContain('System busy')
+            ->expectsOutputToContain('System busy with 1 recent notifications. Skipping failed retries.')
             ->assertExitCode(0);
 
         // Failed should still be failed
@@ -50,6 +50,26 @@ class RetryFailedCommandTest extends TestCase
             'status' => 'failed',
             'retry_count' => 0
         ]);
+    }
+
+    public function test_command_recovers_stuck_pending_even_if_recent_exists()
+    {
+        Queue::fake();
+
+        // Create a recent pending notification
+        Notification::factory()->create(['status' => 'pending']);
+        
+        // Create a stuck pending notification (2 hours old)
+        Notification::factory()->create([
+            'status' => 'pending',
+            'created_at' => now()->subHours(2)
+        ]);
+
+        $this->artisan('notifications:retry-failed')
+            ->expectsOutputToContain('Found 1 notifications to process')
+            ->assertExitCode(0);
+
+        $this->assertDatabaseCount('notifications', 2);
     }
 
     public function test_command_skips_when_retries_reach_four()
@@ -62,7 +82,7 @@ class RetryFailedCommandTest extends TestCase
         ]);
 
         $this->artisan('notifications:retry-failed')
-            ->expectsOutputToContain('No failed notifications eligible')
+            ->expectsOutputToContain('No notifications eligible for retry or recovery found.')
             ->assertExitCode(0);
     }
 }
