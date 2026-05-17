@@ -53,8 +53,47 @@ The following shortcuts are available via the `Makefile` for easier development:
 Once the system is running, access the Swagger documentation at:
 `http://localhost:8001/api/documentation`
 
-### Creation Example (POST /api/v1/notifications)
-Returns **202 Accepted**:
+### 1. Create Single Notification
+**POST** `/api/v1/notifications`
+```bash
+curl -X POST http://localhost:8001/api/v1/notifications \
+     -H "Content-Type: application/json" \
+     -d '{
+           "channel": "sms",
+           "recipient": "+905000000000",
+           "content": "Hello World",
+           "priority": "high",
+           "idempotency_key": "unique-uuid-here"
+         }'
+```
+
+### 2. Create Batch Notifications
+**POST** `/api/v1/notifications/batch` (Limit: 1000)
+```bash
+curl -X POST http://localhost:8001/api/v1/notifications/batch \
+     -H "Content-Type: application/json" \
+     -d '{
+           "notifications": [
+             {"channel": "email", "recipient": "user1@example.com", "content": "Msg 1"},
+             {"channel": "push", "recipient": "token_abc", "content": "Msg 2"}
+           ]
+         }'
+```
+
+### 3. List & Filter Notifications
+**GET** `/api/v1/notifications`
+| Parameter | Description |
+|-----------|-------------|
+| `status`  | `pending`, `processing`, `completed`, `failed`, `cancelled` |
+| `channel` | `sms`, `email`, `push` |
+| `batch_id`| UUID of the batch |
+| `date_from`| YYYY-MM-DD |
+
+**Example (Find failed SMS):**
+`GET /api/v1/notifications?status=failed&channel=sms`
+
+### Response Format
+All creation endpoints return **202 Accepted**:
 ```json
 {
   "messageId": "uuid-here",
