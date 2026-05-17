@@ -66,3 +66,4 @@ Returns **202 Accepted**:
 ## Monitoring
 - **Horizon Dashboard**: `http://localhost:8001/horizon`
 - **Health Check**: `GET http://localhost:8001/api/health`
+- **Real-time Logs**: Open `client/index.html` in your browser to view live WebSocket status updates.
