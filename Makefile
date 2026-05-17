@@ -33,6 +33,9 @@ seed:
 build:
 	$(SAIL) build --no-cache
 
+load-test:
+	$(SAIL) artisan notifications:load-test --count=1000 --concurrency=20 --cleanup
+
 setup:
 	composer install
 	cp .env.example .env
