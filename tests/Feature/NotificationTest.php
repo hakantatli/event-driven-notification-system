@@ -23,7 +23,10 @@ class NotificationTest extends TestCase
             'priority' => 'high',
         ]);
 
-        $response->assertStatus(201);
+        $response->assertStatus(202)
+            ->assertJsonStructure(['messageId', 'status', 'timestamp'])
+            ->assertJson(['status' => 'accepted']);
+
         $this->assertDatabaseHas('notifications', [
             'recipient' => '+905066588775',
             'channel' => 'sms',
@@ -49,7 +52,9 @@ class NotificationTest extends TestCase
             'template_vars' => ['name' => 'John'],
         ]);
 
-        $response->assertStatus(201);
+        $response->assertStatus(202)
+            ->assertJsonStructure(['messageId', 'status', 'timestamp']);
+
         $this->assertDatabaseHas('notifications', [
             'content' => 'Welcome John!',
         ]);
@@ -66,7 +71,9 @@ class NotificationTest extends TestCase
             ]
         ]);
 
-        $response->assertStatus(201);
+        $response->assertStatus(202)
+            ->assertJsonStructure(['messageId', 'status', 'timestamp']);
+
         $this->assertCount(2, Notification::all());
     }
 
@@ -118,13 +125,13 @@ class NotificationTest extends TestCase
 
         // First request
         $response1 = $this->postJson('/api/v1/notifications', $payload);
-        $response1->assertStatus(201);
-        $id1 = $response1->json('id');
+        $response1->assertStatus(202);
+        $id1 = $response1->json('messageId');
 
         // Second request with same key
         $response2 = $this->postJson('/api/v1/notifications', $payload);
-        $response2->assertStatus(201);
-        $id2 = $response2->json('id');
+        $response2->assertStatus(202);
+        $id2 = $response2->json('messageId');
 
         // Assert they are the same record
         $this->assertEquals($id1, $id2);

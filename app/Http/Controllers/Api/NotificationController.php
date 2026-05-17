@@ -58,13 +58,21 @@ class NotificationController extends Controller
     public function store(StoreNotificationRequest $request)
     {
         $notification = $this->notificationService->createNotification($request->validated());
-        return response()->json($notification, 201);
+        return response()->json([
+            'messageId' => $notification->id,
+            'status' => 'accepted',
+            'timestamp' => now()->toIso8601String(),
+        ], 202);
     }
 
     public function batchStore(StoreBatchNotificationRequest $request)
     {
         $result = $this->notificationService->createBatch($request->validated()['notifications']);
-        return response()->json($result, 201);
+        return response()->json([
+            'messageId' => $result['batch_id'],
+            'status' => 'accepted',
+            'timestamp' => now()->toIso8601String(),
+        ], 202);
     }
 
     public function show(Notification $notification)
