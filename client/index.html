@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Status Monitor</title>
+    <script src="https://js.pusher.com/8.3.0/pusher.min.js"></script>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f9; }
+        #events { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-height: 400px; overflow-y: auto; }
+        .event { border-bottom: 1px solid #eee; padding: 10px 0; }
+        .event:last-child { border-bottom: none; }
+        .status { font-weight: bold; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; }
+        .status-completed { background: #d4edda; color: #155724; }
+        .status-failed { background: #f8d7da; color: #721c24; }
+        .status-processing { background: #fff3cd; color: #856404; }
+        .status-pending { background: #e2e3e5; color: #383d41; }
+        .meta { color: #666; font-size: 0.9em; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Real-time Notification Monitor</h1>
+    <p>Connected to: <code id="host-info">localhost:8080</code></p>
+    <div id="events">
+        <div class="event">Waiting for status updates...</div>
+    </div>
+
+    <script>
+        // Enable logging for debugging
+        Pusher.logToConsole = true;
+
+        // Configuration from .env
+                const appKey = 'lfdsnez8iyermza9wmun';
+        const host = '127.0.0.1';
+        const port = 8080;
+
+        // Initialize Pusher (compatible with Reverb)
+        const pusher = new Pusher(appKey, {
+            wsHost: host,
+            wsPort: port,
+            forceTLS: false,
+            enabledTransports: ['ws', 'wss'],
+            cluster: 'reverb' // Reverb expects this cluster name
+        });
+
+        const channel = pusher.subscribe('notifications');
+        const eventsDiv = document.getElementById('events');
+
+        channel.bind('App\\Events\\NotificationStatusUpdated', function(data) {
+            console.log('Received Event:', data);
+            
+            // Remove the "waiting" message if it exists
+            if (eventsDiv.innerText.includes('Waiting')) {
+                eventsDiv.innerHTML = '';
+            }
+
+            const eventEl = document.createElement('div');
+            eventEl.className = 'event';
+            
+            const statusClass = 'status-' + data.status;
+            
+            eventEl.innerHTML = `
+                <div>
+                    <strong>ID:</strong> ${data.id} 
+                    <span class="status ${statusClass}">${data.status}</span>
+                </div>
+                <div class="meta">
+                    Channel: ${data.channel} | Recipient: ${data.recipient} | Time: ${data.updated_at}
+                </div>
+            `;
+            
+            eventsDiv.prepend(eventEl);
+        });
+
+        pusher.connection.bind('connected', () => {
+            console.log('Connected to Reverb!');
+            document.getElementById('host-info').style.color = 'green';
+            document.getElementById('host-info').innerText += ' (Connected)';
+        });
+
+        pusher.connection.bind('error', (err) => {
+            console.error('Connection Error:', err);
+            document.getElementById('host-info').style.color = 'red';
+            document.getElementById('host-info').innerText += ' (Connection Error)';
+        });
+    </script>
+</body>
+</html>

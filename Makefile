@@ -1,0 +1,43 @@
+.PHONY: up down restart shell test horizon logs migrate seed setup build
+
+SAIL = ./vendor/bin/sail
+
+up:
+	$(SAIL) up -d
+
+down:
+	$(SAIL) down
+
+restart:
+	$(SAIL) down
+	$(SAIL) up -d
+
+shell:
+	$(SAIL) shell
+
+test:
+	$(SAIL) artisan test
+
+horizon:
+	$(SAIL) artisan horizon
+
+logs:
+	$(SAIL) logs -f
+
+migrate:
+	$(SAIL) artisan migrate
+
+seed:
+	$(SAIL) artisan db:seed
+
+build:
+	$(SAIL) build --no-cache
+
+setup:
+	composer install
+	cp .env.example .env
+	php artisan key:generate
+	$(SAIL) up -d
+	$(SAIL) artisan migrate
+	npm install
+	npm run build
