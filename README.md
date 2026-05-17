@@ -5,13 +5,13 @@ A scalable notification system built with Laravel 13, PostgreSQL, Redis, and Hor
 ## Features
 - **Scalable APIs**: Create single or batch notifications (up to 1000).
 - **Asynchronous Processing**: Powered by Laravel Horizon with priority queues (high, normal, low).
-- **Rate Limiting**: Strict limit of 100 messages/second/channel using Redis.
+- **Rate Limiting**: Configurable via ENV (default 100 msgs/sec/channel) using Redis.
 - **Template System**: Dynamic templates with variable substitution.
 - **Scheduled Notifications**: Delay delivery for a specific time.
-- **Real-time Updates**: Status changes broadcasted via Laravel Reverb.
+- **Real-time Updates**: Status changes broadcasted via Laravel Reverb (asynchronous).
 - **Observability**: Built-in Horizon dashboard and a custom `/api/health` endpoint.
 - **Structured Logging**: Correlation IDs included in all logs and response headers.
-- **Idempotency**: Prevent duplicate notifications using `idempotency_key`.
+- **Idempotency**: Prevent duplicate notifications using `idempotency_key` with database-level uniqueness.
 
 ## Tech Stack
 - **Framework**: Laravel 13
@@ -20,39 +20,47 @@ A scalable notification system built with Laravel 13, PostgreSQL, Redis, and Hor
 - **WebSockets**: Laravel Reverb
 - **Infrastructure**: Docker Compose (Laravel Sail)
 
-## Setup
+## Quick Start
 
 1. **Clone the repository**
-2. **Install dependencies**:
+2. **Setup the project**:
    ```bash
-   composer install
+   make setup
    ```
-3. **Set environment variables**:
+3. **Start the system**:
    ```bash
-   cp .env.example .env
-   # Update NOTIFICATION_PROVIDER_URL and other credentials
+   make up
    ```
-4. **Start the system**:
-   ```bash
-   ./vendor/bin/sail up -d
-   ```
-5. **Run migrations**:
-   ```bash
-   ./vendor/bin/sail artisan migrate
-   ```
-6. **Start Horizon (in a separate tab or as background)**:
-   ```bash
-   ./vendor/bin/sail artisan horizon
-   ```
+
+## Makefile Commands
+
+The following shortcuts are available via the `Makefile` for easier development:
+
+| Command | Description |
+|---------|-------------|
+| `make up` | Start the Docker containers in detached mode |
+| `make down` | Stop all Docker containers |
+| `make restart` | Full stop and restart of the system |
+| `make test` | Run the full PHPUnit test suite |
+| `make load-test`| Run high-volume load test (1k notifications) |
+| `make horizon` | Start the Horizon dashboard and queue workers |
+| `make migrate` | Run database migrations |
+| `make shell` | Open a bash shell inside the application container |
+| `make logs` | Follow the application and container logs |
+| `make setup` | Initial project installation and configuration |
 
 ## API Documentation
 Once the system is running, access the Swagger documentation at:
 `http://localhost:8001/api/documentation`
 
-## Testing
-Run the test suite with a single command:
-```bash
-./vendor/bin/sail artisan test
+### Creation Example (POST /api/v1/notifications)
+Returns **202 Accepted**:
+```json
+{
+  "messageId": "uuid-here",
+  "status": "accepted",
+  "timestamp": "ISO8601"
+}
 ```
 
 ## Monitoring
