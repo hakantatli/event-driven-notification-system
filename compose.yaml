@@ -25,6 +25,7 @@ services:
         depends_on:
             - pgsql
             - redis
+            - rabbitmq
             - mailpit
     pgsql:
         image: 'postgres:18-alpine'
@@ -49,6 +50,24 @@ services:
                 - '${DB_DATABASE}'
                 - '-U'
                 - '${DB_USERNAME}'
+            retries: 3
+            timeout: 5s
+    rabbitmq:
+        image: 'rabbitmq:4-management-alpine'
+        ports:
+            - '${FORWARD_RABBITMQ_PORT:-5672}:5672'
+            - '${FORWARD_RABBITMQ_MGMT_PORT:-15672}:15672'
+        environment:
+            RABBITMQ_DEFAULT_USER: '${RABBITMQ_USER:-guest}'
+            RABBITMQ_DEFAULT_PASS: '${RABBITMQ_PASSWORD:-guest}'
+        networks:
+            - sail
+        healthcheck:
+            test:
+                - CMD
+                - rabbitmq-diagnostics
+                - '-q'
+                - check_running
             retries: 3
             timeout: 5s
     redis:

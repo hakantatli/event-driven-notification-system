@@ -198,7 +198,7 @@ return [
 
     'defaults' => [
         'supervisor-1' => [
-            'connection' => 'redis',
+            'connection' => 'rabbitmq',
             'queue' => ['high', 'normal', 'low', 'default'],
             'balance' => 'auto',
             'autoScalingStrategy' => 'time',

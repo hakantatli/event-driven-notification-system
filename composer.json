@@ -12,7 +12,8 @@
         "laravel/horizon": "^5.46",
         "laravel/reverb": "^1.10",
         "laravel/sanctum": "^4.0",
-        "laravel/tinker": "^3.0"
+        "laravel/tinker": "^3.0",
+        "vladimir-yuldashev/laravel-queue-rabbitmq": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
