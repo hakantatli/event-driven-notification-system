@@ -36,8 +36,6 @@ A scalable notification system built with Laravel 13, PostgreSQL, Redis, and Hor
 
 The following shortcuts are available via the `Makefile` for easier development:
 
-| Command | Description |
-|---------|-------------|
 | `make up` | Start Docker containers and Horizon workers |
 | `make down` | Stop all Docker containers |
 | `make restart` | Full stop and restart of system and Horizon |
@@ -104,5 +102,6 @@ All creation endpoints return **202 Accepted**:
 
 ## Monitoring
 - **Horizon Dashboard**: `http://localhost:8001/horizon`
+- **RabbitMQ Management**: `http://localhost:8002`
 - **Health Check**: `GET http://localhost:8001/api/health`
 - **Real-time Logs**: Open `client/index.html` in your browser to view live WebSocket status updates.

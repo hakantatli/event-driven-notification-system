@@ -44,5 +44,3 @@ setup:
 	php artisan key:generate
 	$(SAIL) up -d
 	$(SAIL) artisan migrate
-	npm install
-	npm run build
