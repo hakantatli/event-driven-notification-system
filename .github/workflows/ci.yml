@@ -41,8 +41,8 @@ jobs:
     - uses: actions/checkout@v4
     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
-    - name: Install Patch Utility
-      run: sudo apt-get update && sudo apt-get install -y patch
+    - name: Ensure Patch Utility
+      run: which patch || (sudo apt-get update && sudo apt-get install -y patch)
     - name: Install Dependencies
       run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --ignore-platform-reqs
     - name: Generate key
