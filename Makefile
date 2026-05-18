@@ -4,7 +4,8 @@ SAIL = ./vendor/bin/sail
 
 up:
 	$(SAIL) up -d
-	$(SAIL) artisan horizon
+	$(SAIL) artisan horizon &
+	$(SAIL) artisan reverb:start &
 
 down:
 	$(SAIL) down
@@ -12,7 +13,8 @@ down:
 restart:
 	$(SAIL) down
 	$(SAIL) up -d
-	$(SAIL) artisan horizon
+	$(SAIL) artisan horizon &
+	$(SAIL) artisan reverb:start &
 
 shell:
 	$(SAIL) shell
