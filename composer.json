@@ -7,6 +7,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "cweagans/composer-patches": "^2.0",
         "darkaonline/l5-swagger": "^11.0",
         "laravel/framework": "^13.8",
         "laravel/horizon": "^5.46",
@@ -76,6 +77,11 @@
     "extra": {
         "laravel": {
             "dont-discover": []
+        },
+        "patches": {
+            "vladimir-yuldashev/laravel-queue-rabbitmq": {
+                "Fix Laravel 13 currentJob visibility": "https://patch-diff.githubusercontent.com/raw/vyuldashev/laravel-queue-rabbitmq/pull/664.patch"
+            }
         }
     },
     "config": {
@@ -83,6 +89,7 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
+            "cweagans/composer-patches": true,
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
         }
