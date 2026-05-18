@@ -10,10 +10,10 @@ use Illuminate\Support\Benchmark;
 
 class LoadTestNotificationsCommand extends Command
 {
-    protected $signature = 'notifications:load-test 
-                            {--count=100 : Total notifications to send} 
-                            {--concurrency=10 : Concurrent requests} 
-                            {--url= : Override the API URL (defaults to http://127.0.0.1:8001)} 
+    protected $signature = 'notifications:load-test
+                            {--count=10000 : Total notifications to send}
+                            {--concurrency=20 : Concurrent requests}
+                            {--url= : Override the API URL (defaults to http://127.0.0.1:8001)}
                             {--cleanup : Delete notifications after test}';
     protected $description = 'Perform a load test on the notification creation API';
 

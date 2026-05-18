@@ -40,7 +40,7 @@ The following shortcuts are available via the `Makefile` for easier development:
 | `make down` | Stop all Docker containers |
 | `make restart` | Full stop and restart of system and Horizon |
 | `make test` | Run the full PHPUnit test suite |
-| `make load-test`| Run high-volume load test (1k notifications) |
+| `make load-test`| Run high-volume load test (10k notifications) |
 | `make horizon` | Start the Horizon dashboard and queue workers |
 | `make migrate` | Run database migrations |
 | `make shell` | Open a bash shell inside the application container |
