@@ -4,6 +4,7 @@ SAIL = ./vendor/bin/sail
 
 up:
 	$(SAIL) up -d
+	@echo "Starting Octane with FrankenPHP..."
 	$(SAIL) artisan horizon &
 	$(SAIL) artisan reverb:start &
 
@@ -13,6 +14,7 @@ down:
 restart:
 	$(SAIL) down
 	$(SAIL) up -d
+	@echo "Restarting Octane with FrankenPHP..."
 	$(SAIL) artisan horizon &
 	$(SAIL) artisan reverb:start &
 

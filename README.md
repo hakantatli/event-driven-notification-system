@@ -1,22 +1,25 @@
 # Event-Driven Notification System
 
-A scalable notification system built with Laravel 13, PostgreSQL, Redis, and Horizon.
+A scalable notification system built with Laravel 13, Octane (FrankenPHP), PostgreSQL, RabbitMQ, and Horizon.
 
 ## Features
 - **Scalable APIs**: Create single or batch notifications (up to 1000).
-- **Asynchronous Processing**: Powered by Laravel Horizon with priority queues (high, normal, low).
+- **High Performance**: Powered by **Laravel Octane** and **FrankenPHP** for millisecond response times.
+- **Asynchronous Processing**: Powered by RabbitMQ for 100% persistence and Laravel Horizon for management.
 - **Rate Limiting**: Configurable via ENV (default 100 msgs/sec/channel) using Redis.
 - **Template System**: Dynamic templates with variable substitution.
 - **Scheduled Notifications**: Delay delivery for a specific time.
 - **Real-time Updates**: Status changes broadcasted via Laravel Reverb (asynchronous).
-- **Observability**: Built-in Horizon dashboard and a custom `/api/health` endpoint.
+- **Observability**: Built-in Horizon dashboard, RabbitMQ Management UI, and a custom `/api/health` endpoint.
 - **Structured Logging**: Correlation IDs included in all logs and response headers.
 - **Idempotency**: Prevent duplicate notifications using `idempotency_key` with database-level uniqueness.
 
 ## Tech Stack
-- **Framework**: Laravel 13
+- **Framework**: Laravel 13 + Octane
+- **Web Server**: FrankenPHP
 - **Database**: PostgreSQL
-- **Queue/Cache**: Redis + Laravel Horizon
+- **Queue**: RabbitMQ 4
+- **Cache/Throttle**: Redis
 - **WebSockets**: Laravel Reverb
 - **Infrastructure**: Docker Compose (Laravel Sail)
 
@@ -36,7 +39,9 @@ A scalable notification system built with Laravel 13, PostgreSQL, Redis, and Hor
 
 The following shortcuts are available via the `Makefile` for easier development:
 
-| `make up` | Start Docker containers and Horizon workers |
+| Command | Description |
+|---------|-------------|
+| `make up` | Start Docker containers, Octane, and Horizon workers |
 | `make down` | Stop all Docker containers |
 | `make restart` | Full stop and restart of system and Horizon |
 | `make test` | Run the full PHPUnit test suite |
@@ -102,6 +107,6 @@ All creation endpoints return **202 Accepted**:
 
 ## Monitoring
 - **Horizon Dashboard**: `http://localhost:8001/horizon`
-- **RabbitMQ Management**: `http://localhost:8002`
+- **RabbitMQ Admin**: `http://localhost:15672` (guest/guest)
 - **Health Check**: `GET http://localhost:8001/api/health`
 - **Real-time Logs**: Open `client/index.html` in your browser to view live WebSocket status updates.
