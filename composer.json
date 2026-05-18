@@ -80,7 +80,7 @@
         },
         "patches": {
             "vladimir-yuldashev/laravel-queue-rabbitmq": {
-                "Fix Laravel 13 currentJob visibility": "https://patch-diff.githubusercontent.com/raw/vyuldashev/laravel-queue-rabbitmq/pull/664.patch"
+                "Fix Laravel 13 currentJob visibility": "rabbitmq-laravel-13-fix.patch"
             }
         }
     },
