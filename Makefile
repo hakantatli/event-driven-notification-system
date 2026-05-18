@@ -4,6 +4,7 @@ SAIL = ./vendor/bin/sail
 
 up:
 	$(SAIL) up -d
+	$(SAIL) artisan horizon
 
 down:
 	$(SAIL) down
@@ -11,6 +12,7 @@ down:
 restart:
 	$(SAIL) down
 	$(SAIL) up -d
+	$(SAIL) artisan horizon
 
 shell:
 	$(SAIL) shell

@@ -38,9 +38,9 @@ The following shortcuts are available via the `Makefile` for easier development:
 
 | Command | Description |
 |---------|-------------|
-| `make up` | Start the Docker containers in detached mode |
+| `make up` | Start Docker containers and Horizon workers |
 | `make down` | Stop all Docker containers |
-| `make restart` | Full stop and restart of the system |
+| `make restart` | Full stop and restart of system and Horizon |
 | `make test` | Run the full PHPUnit test suite |
 | `make load-test`| Run high-volume load test (1k notifications) |
 | `make horizon` | Start the Horizon dashboard and queue workers |
