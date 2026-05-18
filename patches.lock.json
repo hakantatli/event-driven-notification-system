@@ -1,12 +1,12 @@
 {
-    "_hash": "e58484853755e8f5fb5f3ce697b7050a654d7926b7489e277e816f57b1408744",
+    "_hash": "878b2d550639a7690b92b2113379db41fc15b74ed3a9c839ade0d13f2174e395",
     "patches": {
         "vladimir-yuldashev/laravel-queue-rabbitmq": [
             {
                 "package": "vladimir-yuldashev/laravel-queue-rabbitmq",
                 "description": "Fix Laravel 13 currentJob visibility",
                 "url": "rabbitmq-laravel-13-fix.patch",
-                "sha256": "c53e4cfa06ab69b3fcb0e7597ae6c975c14119642674314264e3d52050e39a82",
+                "sha256": "1566082f02f6b9f3cd8668de134f9bb94c065c0323a15c542e8e348bb6af2234",
                 "depth": 1,
                 "extra": {
                     "provenance": "root"

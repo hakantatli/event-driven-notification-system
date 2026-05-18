@@ -1,11 +1,11 @@
 --- a/src/Consumer.php
 +++ b/src/Consumer.php
 @@ -32,7 +32,7 @@
-     /** @var int */
-     protected $prefetchSize;
+     /** @var AMQPChannel */
+     protected $channel;
  
 -    protected $currentJob;
 +    public $currentJob;
  
-     public function __construct(
-         Container $container,
+     public function setContainer(Container $value): void
+     {
