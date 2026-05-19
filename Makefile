@@ -33,6 +33,9 @@ logs:
 migrate:
 	$(SAIL) artisan migrate
 
+docs:
+	$(SAIL) artisan l5-swagger:generate
+
 seed:
 	$(SAIL) artisan db:seed
 

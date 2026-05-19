@@ -47,6 +47,371 @@
                         "description": "Paginated list of notifications"
                     }
                 }
+            },
+            "post": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Create a single notification",
+                "operationId": "0faafeb87df4ff1447878720cce80571",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "channel",
+                                    "recipient"
+                                ],
+                                "properties": {
+                                    "channel": {
+                                        "type": "string",
+                                        "enum": [
+                                            "sms",
+                                            "email",
+                                            "push"
+                                        ]
+                                    },
+                                    "recipient": {
+                                        "type": "string",
+                                        "example": "+905000000000"
+                                    },
+                                    "content": {
+                                        "type": "string",
+                                        "example": "Hello World"
+                                    },
+                                    "template_name": {
+                                        "type": "string",
+                                        "example": "welcome"
+                                    },
+                                    "template_vars": {
+                                        "type": "object",
+                                        "example": {
+                                            "name": "John"
+                                        }
+                                    },
+                                    "priority": {
+                                        "type": "string",
+                                        "default": "normal",
+                                        "enum": [
+                                            "low",
+                                            "normal",
+                                            "high"
+                                        ]
+                                    },
+                                    "scheduled_at": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2026-05-18 10:00:00"
+                                    },
+                                    "idempotency_key": {
+                                        "type": "string",
+                                        "example": "uuid-here"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "202": {
+                        "description": "Accepted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "messageId": {
+                                            "type": "string",
+                                            "format": "uuid"
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "accepted"
+                                        },
+                                        "timestamp": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error"
+                    }
+                }
+            }
+        },
+        "/notifications/batch": {
+            "post": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Create batch notifications",
+                "operationId": "c0a0293873753806c71563729d80c16e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "notifications"
+                                ],
+                                "properties": {
+                                    "notifications": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "channel": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "sms",
+                                                        "email",
+                                                        "push"
+                                                    ]
+                                                },
+                                                "recipient": {
+                                                    "type": "string"
+                                                },
+                                                "content": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "202": {
+                        "description": "Accepted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "messageId": {
+                                            "description": "Batch ID",
+                                            "type": "string",
+                                            "format": "uuid"
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "accepted"
+                                        },
+                                        "timestamp": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/notifications/{id}": {
+            "get": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Get notification details",
+                "operationId": "6293e7ffc395913cd17da6467e486699",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Notification details"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/notifications/{id}/cancel": {
+            "post": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Cancel a pending notification",
+                "operationId": "0fc321cff5509606d6707384ce854688",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cancelled successfully"
+                    },
+                    "422": {
+                        "description": "Cannot cancel non-pending notification"
+                    }
+                }
+            }
+        },
+        "/templates": {
+            "get": {
+                "tags": [
+                    "Templates"
+                ],
+                "summary": "List all templates",
+                "operationId": "94856caaef34da5d6a9facb2293a0d32",
+                "responses": {
+                    "200": {
+                        "description": "List of templates"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Templates"
+                ],
+                "summary": "Create a new template",
+                "operationId": "ca3ed920360435663e25036484dda979",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "channel",
+                                    "content"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "welcome"
+                                    },
+                                    "channel": {
+                                        "type": "string",
+                                        "enum": [
+                                            "sms",
+                                            "email",
+                                            "push"
+                                        ]
+                                    },
+                                    "content": {
+                                        "type": "string",
+                                        "example": "Hello {{name}}!"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Template created"
+                    },
+                    "422": {
+                        "description": "Validation Error"
+                    }
+                }
+            }
+        },
+        "/templates/{id}": {
+            "get": {
+                "tags": [
+                    "Templates"
+                ],
+                "summary": "Get template details",
+                "operationId": "2df5a825e7eff78029b7610e2a30f799",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Template details"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Templates"
+                ],
+                "summary": "Update an existing template",
+                "operationId": "fed5a0043e23cac91d301c1a17483494",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "channel": {
+                                        "type": "string",
+                                        "enum": [
+                                            "sms",
+                                            "email",
+                                            "push"
+                                        ]
+                                    },
+                                    "content": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Template updated"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
             }
         }
     },
@@ -54,6 +419,10 @@
         {
             "name": "Notifications",
             "description": "Notifications"
+        },
+        {
+            "name": "Templates",
+            "description": "Templates"
         }
     ]
 }

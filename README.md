@@ -47,6 +47,7 @@ The following shortcuts are available via the `Makefile` for easier development:
 | `make test` | Run the full PHPUnit test suite |
 | `make load-test`| Run high-volume load test (10k notifications) |
 | `make horizon` | Start the Horizon dashboard and queue workers |
+| `make docs`    | Regenerate Swagger (OpenAPI) documentation |
 | `make migrate` | Run database migrations |
 | `make shell` | Open a bash shell inside the application container |
 | `make logs` | Follow the application and container logs |
